@@ -42,7 +42,7 @@ A next-generation social streaming platform that blends short-form and long-form
 
 1. **Clone the repository**
 ```bash
-git clone <repository-url>
+git clone https://github.com/ChinmayDaroliya/BOOM.git
 cd my-app
 ```
 
