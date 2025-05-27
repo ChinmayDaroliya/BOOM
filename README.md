@@ -57,6 +57,7 @@ Create a `.env` file in the root directory with the following content:
 DATABASE_URL="postgresql://username:password@localhost:5432/boom_db"
 JWT_SECRET="your-super-secret-jwt-key"
 NEXTAUTH_SECRET="your-nextauth-secret"
+NEXTAUTH_URL="http://localhost:3000"
 ```
 
 4. **Set up the database**
@@ -295,16 +296,3 @@ npm run format       # Format code with Prettier
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📧 Support
-
-For questions or support:
-- Email: hr@boomofficial.com
-- Website: www.boomofficial.com
-
-## 📄 License
-
-This project is part of the BOOM Entertainment technical assessment.
-
----
-
-**Built with ❤️ for the BOOM Entertainment Full-Stack Developer Assignment**
