@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int      @id @default(autoincrement())
+  username        String   @unique
+  email           String   @unique
+  passwordHash    String
+  walletBalance   Int      @default(500) // ₹500 initial balance
+  createdAt       DateTime @default(now())
+  videos          Video[]
+  purchases       Purchase[]
+  comments        Comment[]
+  giftsSent       Gift[]   @relation("GiftSender")
+  giftsReceived   Gift[]   @relation("GiftReceiver")
+}
+
+model Video {
+  id              Int      @id @default(autoincrement())
+  title           String
+  description     String
+  videoType       String   // "short" or "long"
+  filePath        String?  // For short-form (e.g., "/uploads/video.mp4")
+  videoUrl        String?  // For long-form (e.g., YouTube URL)
+  price           Int?     // Only for long-form videos
+  createdAt       DateTime @default(now())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purchases       Purchase[]
+  comments        Comment[]
+  gifts           Gift[]
+}
+
+model Purchase {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  videoId   Int
+  amount    Int      // Add amount field to track purchase price
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, videoId])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  userId    Int
+  videoId   Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+}
+
+model Gift {
+  id          Int      @id @default(autoincrement())
+  amount      Int
+  fromUserId  Int
+  toUserId    Int
+  videoId     Int
+  createdAt   DateTime @default(now())
+  fromUser    User     @relation("GiftSender", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser      User     @relation("GiftReceiver", fields: [toUserId], references: [id], onDelete: Cascade)
+  video       Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+}
